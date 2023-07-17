@@ -1,0 +1,25 @@
+{
+    "typescript": {
+        "indentWidth": 4,
+        "singleBodyPosition": "sameLine",
+        "trailingCommas": "never",
+        "operatorPosition": "sameLine",
+        "preferHanging": true,
+        "arrowFunction.useParentheses": "preferNone",
+        "exportDeclaration.forceSingleLine": true,
+        "importDeclaration.forceSingleLine": true
+    },
+    "json": {
+        "indentWidth": 4,
+        "newLineKind": "lf"
+    },
+    "includes": ["**/*.{ts,json}"],
+    "excludes": [
+        "**/node_modules",
+        "**/*-lock.json"
+    ],
+    "plugins": [
+        "https://plugins.dprint.dev/typescript-0.85.1.wasm",
+        "https://plugins.dprint.dev/json-0.17.4.wasm"
+    ]
+}

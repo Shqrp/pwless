@@ -1,0 +1,21 @@
+{
+    "name": "pwless",
+    "version": "0.0.1",
+    "description": "A Node.js wrapper for the Passwordless.dev  API",
+    "main": "src/index.ts",
+    "repository": "https://github.com/Shqrp/pwless",
+    "author": "Andrea Giurgola",
+    "license": "MIT",
+    "scripts": {
+        "commitlint": "commitlint --edit",
+        "prepare": "husky install"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^17.6.6",
+        "@commitlint/config-conventional": "^17.6.6",
+        "dprint": "^0.39.0",
+        "eslint": "^8.44.0",
+        "husky": "^8.0.3",
+        "typescript": "^5.1.6"
+    }
+}
