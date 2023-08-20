@@ -1,4 +1,5 @@
 import { request } from "https";
+import type { Credential } from "./types";
 
 interface ClientOptions {
     secret?: string;
@@ -7,9 +8,9 @@ interface ClientOptions {
 } 
 
 export default class Client {
-    private secret: string;
-    private url: string;
-    private timeout: number;
+    private readonly secret: string;
+    private readonly url: string;
+    private readonly timeout: number;
 
     constructor(options?: ClientOptions) {
         this.secret = (options?.secret || process.env.PWLESS_SECRET) ?? (() => { throw new Error("An API secret must be specified, either in the Client options or the PWLESS_SECRET environment variable.") })();
@@ -17,7 +18,11 @@ export default class Client {
         this.timeout = options?.timeout || 5000;
     }
 
-    _request<T>(endpoint: string, payload: Record<string, string | string[]>, method: "GET" | "POST" = "POST") {
+    public async listCredentials(userId: string) {
+        return await this._request<Credential[]>("/credentials/list", { userId }, "GET");
+    }
+
+    private _request<T>(endpoint: string, payload: Record<string, string | string[]>, method: "GET" | "POST" = "POST") {
         const reqData = JSON.stringify(payload);
         return new Promise<T>((resolve, reject) => {
             const req = request({
@@ -39,7 +44,10 @@ export default class Client {
                 res.once("end", () => {
                     try {
                         const stringBody = Buffer.concat(resBody).toString();
-                        resolve(JSON.parse(stringBody));
+                        const parsed = JSON.parse(stringBody);
+                        if (res.statusCode?.toString().startsWith("4")) {
+                            reject(parsed);
+                        } else resolve(parsed);
                     } catch (err) {
                         reject(err);
                     }
@@ -56,7 +64,7 @@ export default class Client {
         })
     }
 
-    _buildParams(endpoint: string, payload: Record<string, string | string[]>) {
+    private _buildParams(endpoint: string, payload: Record<string, string | string[]>) {
         const keys = Object.keys(payload);
         const values = Object.values(payload);
         return `${endpoint}?${keys.map((k, i) => `${k}=${values[i]}`).join("&")}`;
